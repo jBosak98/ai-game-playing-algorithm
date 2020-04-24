@@ -1,0 +1,11 @@
+.BoardField {
+  background-color: #dddddd;
+  width: 120px;
+  height: 120px;
+  &.black {
+    background-color: #222222;
+  }
+  &.isClicked {
+    background-color: red;
+  }
+}

@@ -1,0 +1,13 @@
+.Pawn {
+  width: 120px;
+  height: 120px;
+  position: absolute;
+  margin: auto;
+  .fulfillment {
+    background-color: #459;
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+    border-radius: 60px;
+  }
+}

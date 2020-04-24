@@ -1,0 +1,14 @@
+.BoardBackground {
+  display: grid;
+  justify-items: center;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 120px;
+  grid-row: 6;
+  height: 500px;
+  width: min-content;
+  justify-self: center;
+  align-items: end;
+  margin: auto;
+  width: 960px;
+  height: 960px;
+}
