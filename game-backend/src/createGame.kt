@@ -1,5 +1,5 @@
 import algorithm.getPossibleMoves
-import model.Game
+import lib.game.Game
 import lib.pawns.Pawn
 import model.Position
 import model.Team
@@ -36,6 +36,6 @@ fun createGame(): Game {
         pawns = pawns,
         nextMove = Team.WHITE,
         isFinished = false,
-        possibleMoves = getPossibleMoves(pawns,null)
+        possibleMoves = getPossibleMoves(pawns, null)
     )
 }

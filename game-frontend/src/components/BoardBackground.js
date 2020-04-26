@@ -3,6 +3,7 @@ import BoardRow from "./BoardRow";
 import "./BoardBackground.scss";
 
 const BoardBackground = ({ row, column, onBoardFieldClick, clickedPawn }) => {
+
   return (
     <div className="BoardBackground">
       {[...Array(row)].map((_, index) => (

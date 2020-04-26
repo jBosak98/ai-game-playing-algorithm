@@ -19,3 +19,11 @@ fun Pawns.getPawns(team: Team?): Map<Position, Pawn> =
         else -> this
     }
 
+fun Pawn.toPawnView(possibleMoves:List<Position>) =
+        PawnView(
+            row = this.row,
+            column = this.column,
+            team = this.team,
+            isKing = this.isKing,
+            possibleMoves = possibleMoves
+        )

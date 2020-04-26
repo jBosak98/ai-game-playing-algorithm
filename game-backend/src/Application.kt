@@ -19,6 +19,7 @@ import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.websocket.webSocket
+import lib.game.toGameView
 import java.time.Duration
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -44,7 +45,7 @@ fun Application.module(testing: Boolean = false) {
             call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
         }
         webSocket("/createGame") {
-            val game =createGame()
+            val game =createGame().toGameView()
             outgoing.send(Frame.Text(Gson().toJson(game)))
         }
     }

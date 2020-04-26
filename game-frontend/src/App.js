@@ -14,18 +14,14 @@ function App() {
   const socketUrl = 'ws://0.0.0.0:8080/createGame';
   const [sendMessage, lastMessage, readyState, getWebSocket] = useWebSocket(socketUrl);
   printConnectionStatus(readyState);
-  // console.log(lastMessage?.data);
-  console.log(sendMessage('Hello'));
   const data = lastMessage && lastMessage.data && JSON.parse(lastMessage.data);
-  console.log(data);
   if(!data){
     return <Loader/>
   }
-  console.log(data)
   const pawns = [
     ...Object.entries(data.pawns).map(x =>x[1])
   ]
-  console.log(pawns)
+  
   return (
     <div className="App">
       <Board row={8} column={8} pawns={pawns} />

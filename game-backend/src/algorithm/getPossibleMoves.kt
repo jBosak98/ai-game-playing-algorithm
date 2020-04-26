@@ -6,16 +6,16 @@ import lib.pawns.isFieldOccupied
 import model.Position
 import model.Team
 
-fun getPossibleMoves(pawns:HashMap<Position, Pawn>, team:Team?): HashMap<Position,List<Position>> {
-     return pawns
+fun getPossibleMoves(pawns:HashMap<Position, Pawn>, team:Team?): HashMap<Position, List<Position>> {
+     val moves = pawns
          .getPawns(team)
          .map {
-             val moves =
-                 getDiagonalMovesPositions(it.value)
-                 .filter { position -> isPositionCorrect(position) && !pawns.isFieldOccupied(position) }
-             it.key to moves
+             val moves = getDiagonalMovesPositions(it.value)
+             println(moves)
+             it.key to moves.filter { position -> isPositionCorrect(position) && !pawns.isFieldOccupied(position) }
          }
-         .toMap() as HashMap<Position, List<Position>>
+    return hashMapOf(*moves.toTypedArray())
+
 }
 
 fun getDiagonalMovesPositions(pawn: Pawn): List<Position> {

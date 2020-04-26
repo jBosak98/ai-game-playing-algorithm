@@ -7,16 +7,14 @@ const BoardField = ({
   onBoardFieldClick,
   rowNumber,
   columnNumber,
-  clickedPawn,
+  isPossibleMoveHighlight,
+  isClicked
 }) => {
-  const isClicked =
-    clickedPawn &&
-    clickedPawn.row === rowNumber &&
-    clickedPawn.column === columnNumber;
+
   return (
     <div
       onClick={() => onBoardFieldClick({ rowNumber, columnNumber })}
-      className={classNames("BoardField", { black: blackColor, isClicked })}
+      className={classNames("BoardField", { black: blackColor, isClicked, isPossibleMoveHighlight })}
     ></div>
   );
 };

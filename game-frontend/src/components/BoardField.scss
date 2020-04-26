@@ -6,6 +6,9 @@
     background-color: #222222;
   }
   &.isClicked {
-    background-color: red;
+    background-color: rgba($color: chartreuse, $alpha: 0.5);
+  }
+  &.isPossibleMoveHighlight {
+    background-color: rgba($color: darkgreen, $alpha: 0.5);
   }
 }

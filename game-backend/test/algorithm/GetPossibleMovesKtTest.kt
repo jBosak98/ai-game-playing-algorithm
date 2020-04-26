@@ -1,14 +1,14 @@
 package algorithm
 
 import createGame
-import model.Game
+import lib.game.Game
 import model.Team
 import org.junit.Before
 import org.junit.Test
 
 internal class GetPossibleMovesKtTest {
 
-    lateinit var game:Game
+    lateinit var game: Game
 
     @Before
     fun setUp() {
