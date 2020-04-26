@@ -1,3 +1,10 @@
 package model
 
-data class Game (val pawns:List<Pawn>, val isBlackTurn:Boolean,val isFinished:Boolean)
+import lib.pawns.Pawn
+
+data class Game (
+    val pawns:HashMap<Position, Pawn>,
+    val nextMove:Team,
+    val isFinished:Boolean,
+    val possibleMoves: HashMap<Position,List<Position>>
+)
