@@ -15,9 +15,9 @@ const Pawn = ({ details, onPawnClick }) => {
   );
 };
 
-const getStyleFromPawnDetails = ({ row, column, color, isBlackTeam }) => {
+const getStyleFromPawnDetails = ({ row, column, color, team }) => {
   const fieldSizePx = 120;
-  const isBlack = isBlackTeam;
+  const isBlack = team === "BLACK";
   const top = `${row * fieldSizePx}px`;
   const left = `${column * fieldSizePx}px`;
   return { top, left, isBlack };
