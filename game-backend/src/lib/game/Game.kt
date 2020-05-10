@@ -1,7 +1,7 @@
 package lib.game
 
 import lib.pawns.Pawn
-import model.Position
+import lib.position.Position
 import lib.Team.Team
 
 data class Game (

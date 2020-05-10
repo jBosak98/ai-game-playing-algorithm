@@ -1,5 +1,5 @@
 package lib.pawns
 
-import model.Position
+import lib.position.Position
 
 typealias Pawns = Map<Position, Pawn>

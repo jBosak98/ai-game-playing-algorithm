@@ -1,6 +1,6 @@
 package lib.pawns
 
-import model.Position
+import lib.position.Position
 import lib.Team.Team
 
 data class PawnView(

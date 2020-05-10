@@ -1,4 +1,4 @@
-package model
+package lib.position
 
 data class Position(
     val row:Int,
