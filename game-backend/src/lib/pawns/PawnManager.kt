@@ -35,3 +35,4 @@ fun Pawn.toPawnView(possibleMoves:List<Position>) =
             isKing = this.isKing,
             possibleMoves = possibleMoves
         )
+

@@ -4,6 +4,7 @@ import lib.pawns.*
 import model.Position
 import lib.Team.Team
 import lib.Team.opposite
+import lib.list.maybeFirst
 
 fun getPossibleMoves(pawns: Pawns): Map<Position, List<Position>> {
     val blackMoves = getPossibleMovesOfTeam(pawns, Team.BLACK)
@@ -26,19 +27,27 @@ fun getPossibleMovesOfTeam(pawns: Pawns, team: Team): Map<Position, List<Positio
         .getPawns(team)
         .map {
             val moves = getCaptureMoves(it.value, pawns)
-//            moves
-//            it.key to
-            it.key to moves.filter { position ->
+            it.key to moves.filter { (position,_) ->
                 !pawns.isFieldOccupied(position) || position == it.key
             }
-        }.toMap()
+        }.fold(listOf<Pair<Position, List<Pair<Position, Int>>>>()){ acc, item:Pair<Position,List<Pair<Position, Int>>> ->
+            val accKills = acc.maybeFirst()?.second?.maybeFirst()?.second ?: -1
+            val itemKills = item.second.maybeFirst()?.second?: -1
+            when {
+                accKills < itemKills -> listOf(item)
+                accKills == itemKills -> acc + item
+                else -> acc
+            }
 
-
+        }.map {(initialPosition, movesWithKills) ->
+            initialPosition to movesWithKills.map { (destination, _) -> destination }
+        }
+        .toMap()
 
     return if (longMoves.values.isEmpty()) shortMoves else longMoves
 }
 
-fun getCaptureMoves(pawn: Pawn, pawns: Pawns): List<Position> {
+fun getCaptureMoves(pawn: Pawn, pawns: Pawns): List<Pair<Position, Int>> {
     return getDiagonalMovesPositions(pawn)
         .filter { pawns.fieldOccupiedByTeam(it) === pawn.team.opposite() }
         .map { Position(2 * it.row - pawn.row, 2 * it.column - pawn.column) }
@@ -55,8 +64,6 @@ fun getCaptureMoves(pawn: Pawn, pawns: Pawns): List<Position> {
                 accKills == itemKills -> acc + item
                 else -> acc
             }
-        }.map {
-            it.first
         }
 }
 

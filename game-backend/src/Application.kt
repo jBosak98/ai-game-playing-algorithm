@@ -45,7 +45,8 @@ fun Application.module(testing: Boolean = false) {
             call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
         }
         webSocket("/createGame") {
-            val game =createGame().toGameView()
+            val game =createGame()
+                .toGameView()
             outgoing.send(Frame.Text(Gson().toJson(game)))
         }
     }

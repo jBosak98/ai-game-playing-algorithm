@@ -1,12 +1,12 @@
 package lib.game
 
-import algorithm.getPossibleMoves
-import lib.pawns.PawnView
 import lib.pawns.toPawnView
 
 fun Game.toGameView(): GameView {
     val pawnsView = this.pawns.map {
-        it.value.toPawnView(this.possibleMoves.getValue(it.key))
+        it
+            .value
+            .toPawnView(this.possibleMoves[it.key] ?: emptyList())
 
     }
     return GameView(
