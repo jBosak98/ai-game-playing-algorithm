@@ -19,6 +19,7 @@ data class Position(
 
     override fun hashCode(): Int = 31 * row + column
     override fun toString(): String {
-        return (column + (row * 8)).toString()
+        return "{ \"row\":$row, \"column\":$column  }"
+//        return (column + (row * 8)).toString()
     }
 }
