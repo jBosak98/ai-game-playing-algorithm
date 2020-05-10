@@ -2,4 +2,4 @@ package lib.pawns
 
 import model.Position
 
-typealias Pawns = HashMap<Position, Pawn>
+typealias Pawns = Map<Position, Pawn>

@@ -1,7 +1,7 @@
 package lib.pawns
 
 import model.Position
-import model.Team
+import lib.Team.Team
 
 data class PawnView(
     val row:Int,

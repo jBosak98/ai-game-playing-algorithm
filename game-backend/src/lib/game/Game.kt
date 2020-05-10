@@ -2,11 +2,11 @@ package lib.game
 
 import lib.pawns.Pawn
 import model.Position
-import model.Team
+import lib.Team.Team
 
 data class Game (
-    val pawns:HashMap<Position, Pawn>,
+    val pawns:Map<Position, Pawn>,
     val nextMove: Team,
     val isFinished:Boolean,
-    val possibleMoves: HashMap<Position,List<Position>>
+    val possibleMoves: Map<Position,List<Position>>
 )

@@ -1,7 +1,7 @@
 package lib.game
 
 import lib.pawns.PawnView
-import model.Team
+import lib.Team.Team
 
 data class GameView (
     val pawns:List<PawnView>,

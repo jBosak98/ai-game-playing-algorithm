@@ -6,7 +6,7 @@ import lib.pawns.toPawnView
 
 fun Game.toGameView(): GameView {
     val pawnsView = this.pawns.map {
-        it.value.toPawnView(this.possibleMoves[it.key]!!)
+        it.value.toPawnView(this.possibleMoves.getValue(it.key))
 
     }
     return GameView(

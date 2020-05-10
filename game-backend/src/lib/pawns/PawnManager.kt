@@ -1,7 +1,7 @@
 package lib.pawns
 
 import model.Position
-import model.Team
+import lib.Team.Team
 
 fun Pawns.isFieldOccupied(position: Position) =
     isFieldOccupied(position.row, position.column)
@@ -9,6 +9,14 @@ fun Pawns.isFieldOccupied(position: Position) =
 fun Pawns.isFieldOccupied(row:Int, column:Int) =
     any { it.key.row == row && it.key.column == column }
 
+fun Pawns.fieldOccupiedByTeam(position: Position) =
+    this[position]?.team
+
+fun Pawns.fieldOccupiedByTeam(row:Int, column:Int) =
+    fieldOccupiedByTeam(Position(row, column))
+
+fun Pawn.getPosition() =
+    Position(this.row, this.column)
 
 fun Pawns.getPawns(): Map<Position, Pawn> = getPawns(null)
 
