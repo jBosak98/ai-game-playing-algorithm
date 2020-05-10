@@ -26,7 +26,12 @@ fun getPossibleMovesOfTeam(pawns: Pawns, team: Team): Map<Position, List<Positio
     val longMoves = pawns
         .getPawns(team)
         .map {
-            val moves = getCaptureMoves(it.value, pawns)
+            val moves = getCaptureMoves(
+                it.key,
+                it.value.team,
+                pawns,
+                1
+            )
             it.key to moves.filter { (position, _) ->
                 !pawns.isFieldOccupied(position) || position == it.key
             }
@@ -46,40 +51,6 @@ fun getPossibleMovesOfTeam(pawns: Pawns, team: Team): Map<Position, List<Positio
         .toMap()
 
     return if (longMoves.values.isEmpty()) shortMoves else longMoves
-}
-
-fun getCaptureMoves(pawn: Pawn, pawns: Pawns): List<Pair<Position, Int>> {
-    val filterFieldsOccupiedByTheSameTeam = fun(movePosition: Position): Boolean {
-        return pawns.fieldOccupiedByTeam(movePosition) === pawn.team.opposite()
-    }
-
-    val getDestinationPosition = fun(capturedPawnPosition: Position): Position {
-        return Position(2 * capturedPawnPosition.row - pawn.row, 2 * capturedPawnPosition.column - pawn.column)
-    }
-
-    val filterOccupiedFields = fun(position: Position): Boolean {
-        return !pawns.isFieldOccupied(position) && isPositionCorrect(position)
-    }
-
-    val getMultiCaptureMoves = fun(singleCapture: Position): List<Pair<Position, Int>> {
-        val filteredPawns = filterCapturedPawn(pawn.getPosition(), singleCapture, pawns)
-        return getCaptureMoves(singleCapture, pawn.team, filteredPawns, 1)
-    }
-    val getTheLongestCaptures = fun(acc: List<Pair<Position, Int>>, item: Pair<Position, Int>): List<Pair<Position, Int>> {
-        val itemKills = item.second
-        val accKills = if (acc.isEmpty()) -1 else acc.first().second
-        return when {
-            accKills < itemKills -> listOf(item)
-            accKills == itemKills -> acc + item
-            else -> acc
-        }
-    }
-    return getDiagonalMovesPositions(pawn)
-        .filter(filterFieldsOccupiedByTheSameTeam)
-        .map (getDestinationPosition)
-        .filter (filterOccupiedFields)
-        .flatMap(getMultiCaptureMoves)
-        .fold(listOf(), getTheLongestCaptures)
 }
 
 fun getCaptureMoves(
@@ -107,6 +78,16 @@ fun getCaptureMoves(
         return getCaptureMoves(move, team, filteredPawns, kills)
     }
 
+    val getTheLongestCaptures = fun(acc: List<Pair<Position, Int>>, item: Pair<Position, Int>): List<Pair<Position, Int>> {
+        val itemKills = item.second
+        val accKills = if (acc.isEmpty()) -1 else acc.first().second
+        return when {
+            accKills < itemKills -> listOf(item)
+            accKills == itemKills -> acc + item
+            else -> acc
+        }
+    }
+
     val possibleMoves =
         getDiagonalMovesPositions(position, team, true)
             .filter(filterFieldsOccupiedByTheSameTeam)
@@ -117,7 +98,8 @@ fun getCaptureMoves(
     val multiCaptureMoves = possibleMoves
         .flatMap(getMultiCaptureMoves)
 
-    return possibleMoves + multiCaptureMoves
+    return (possibleMoves + multiCaptureMoves)
+        .fold(emptyList(), getTheLongestCaptures)
 }
 
 
