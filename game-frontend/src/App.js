@@ -12,7 +12,7 @@ function App() {
 
   return (
     <div className="App">
-      <Board row={8} column={8} />
+      <Board row={8} column={8} gameMode={gameMode} />
     </div>
   );
 }
