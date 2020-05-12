@@ -1,11 +1,24 @@
 import React, { useState } from "react";
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 import Pawn from "./Pawn";
 import BoardBackground from "./BoardBackground";
 import "./Board.scss";
+import Loader from './Loader';
+import printConnectionStatus from '../lib/printConnectionStatus';
+import { socketUrl } from '../lib/constants';
 
-const Board = ({ row, column, pawns = [] }) => {
+const Board = ({ row, column }) => {
   const [clickedPawn, onPawnClick] = useState(undefined);
 
+  const [sendMessage, lastMessage, readyState, getWebSocket] = useWebSocket(socketUrl);
+  printConnectionStatus(readyState);
+  const data = lastMessage && lastMessage.data && JSON.parse(lastMessage.data);
+  if(!data){
+    return <Loader/>
+  }
+  const pawns = [
+    ...Object.entries(data.pawns).map(x =>x[1])
+  ]
   return (
     <div className="Board">
       <BoardBackground
@@ -22,5 +35,7 @@ const Board = ({ row, column, pawns = [] }) => {
     </div>
   );
 };
+
+
 
 export default Board;
