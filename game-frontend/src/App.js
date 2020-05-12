@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.scss";
 import Board from "./components/Board";
+import GameModeSelection from './components/GameModeSelection';
 
 function App() {  
+  const [gameMode, setGameMode] = useState(false);
+
+  if(!gameMode){
+    return <GameModeSelection setGameMode={setGameMode}/>
+  }
+
   return (
     <div className="App">
       <Board row={8} column={8} />
