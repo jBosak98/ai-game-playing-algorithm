@@ -16,7 +16,8 @@ fun getPossibleMovesOfTeam(pawns: Pawns, team: Team): Map<Position, List<Positio
     val shortMoves = getShortMoves(pawns, team)
     val longMoves = getLongMoves(pawns, team)
 
-    return if (longMoves.values.isEmpty()) shortMoves
+    val isLongMovesEmpty = longMoves.values.all { it.isEmpty() }
+    return if (isLongMovesEmpty) shortMoves
     else longMoves
 
 }
