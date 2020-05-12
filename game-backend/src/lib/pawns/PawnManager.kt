@@ -35,4 +35,13 @@ fun Pawn.toPawnView(possibleMoves:List<Position>) =
             isKing = this.isKing,
             possibleMoves = possibleMoves
         )
+fun PawnView.toPawn() = Pawn(
+    row = this.row,
+    column = this.column,
+    team = this.team,
+    isKing = this.isKing,
+    possibleMoves = this.possibleMoves
+)
+
+fun Pawn.toPosition() = Position(this.row, this.column)
 
