@@ -19,6 +19,7 @@ fun getCaptureMoves(
     pawns: Pawns,
     capturedPawns: Int
 ): List<PossibleMove> {
+    val pawn = pawns.getValue(position)
     val filterFieldsOccupiedByTheSameTeam = fun(movePosition: Position): Boolean {
         return pawns.fieldOccupiedByTeam(movePosition) === team.opposite()
     }
@@ -59,7 +60,7 @@ fun getCaptureMoves(
         }
 
     val possibleMoves =
-        getDiagonalMovesPositions(position, team, true)
+        getDiagonalMovesPositions(position, team, pawn.isKing)
             .filter(filterFieldsOccupiedByTheSameTeam)
             .map(getDestinationPosition)
             .filter(filterOccupiedFields)

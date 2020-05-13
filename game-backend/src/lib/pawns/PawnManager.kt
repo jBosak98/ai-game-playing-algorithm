@@ -43,5 +43,16 @@ fun PawnView.toPawn() = Pawn(
     possibleMoves = this.possibleMoves
 )
 
+fun Pawn.shouldChangeToKing():Boolean{
+    val position = this.getPosition()
+    return when{
+        position.row == 0 && this.team == Team.WHITE -> true
+        position.row == 7 && this.team == Team.BLACK -> true
+        else -> false
+    }
+}
+fun Pawn.makeKing() =Pawn(this.row, this.column, this.team, true)
+
+
 fun Pawn.toPosition() = Position(this.row, this.column)
 
