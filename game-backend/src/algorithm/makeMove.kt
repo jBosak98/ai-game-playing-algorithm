@@ -1,10 +1,10 @@
 package algorithm
 
+import lib.Team.Team
 import lib.Team.opposite
 import lib.game.*
-import lib.pawns.makeKing
-import lib.pawns.shouldChangeToKing
-import lib.pawns.toPosition
+import lib.pawns.*
+import lib.position.InitPosition
 
 
 fun makeMove(gameWithMove: GameWithMove): GameView {
@@ -28,10 +28,14 @@ fun makeMove(game: Game, move: Move): Game {
                     else it.value
         }?.toMap() ?: return game
 
+    val possibleMoves = getPossibleMoves(pawns)
+    val isFinished = isFinished(pawns, possibleMoves)
+
     return Game(
         pawns = pawns,
         nextMove = game.nextMove.opposite(),
-        isFinished = false,
-        possibleMoves = getPossibleMoves(pawns)
+        isFinished = isFinished,
+        possibleMoves = possibleMoves,
+        winner = if(isFinished) getWinner(pawns, possibleMoves) else null
     )
 }

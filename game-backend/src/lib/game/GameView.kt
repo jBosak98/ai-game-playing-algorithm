@@ -6,6 +6,7 @@ import lib.Team.Team
 data class GameView (
     val pawns:List<PawnView>,
     val nextMove: Team,
-    val isFinished:Boolean
+    val isFinished:Boolean,
+    val winner:Team? = null
 )
 

@@ -18,7 +18,8 @@ fun Game.toGameView(): GameView {
     return GameView(
         pawns = pawnsView,
         nextMove = this.nextMove,
-        isFinished = this.isFinished
+        isFinished = this.isFinished,
+        winner = this.winner
     )
 }
 
