@@ -1,11 +1,8 @@
 package algorithm
 
-import lib.Team.Team
 import lib.Team.opposite
 import lib.game.*
 import lib.pawns.*
-import lib.position.InitPosition
-
 
 fun makeMove(gameWithMove: GameWithMove): GameView {
     val game = gameWithMove.toGame()
