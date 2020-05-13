@@ -10,6 +10,7 @@ import TurnInfo from "./TurnInfo";
 
 const Board = ({ row, column, gameMode }) => {
   const [clickedPawn, onPawnClick] = useState(undefined);
+  const [winner, setWinner] = useState(undefined);
   const [sendMessage, lastMessage, readyState, getWebSocket] = useWebSocket(
     socketUrl
   );
@@ -18,7 +19,7 @@ const Board = ({ row, column, gameMode }) => {
   const data = parseData(lastMessage);
 
   if (!data) return <Loader />;
-    
+
   const onBoardFieldClick = getOnBoardFieldClick({
     data,
     clickedPawn,
@@ -29,9 +30,11 @@ const Board = ({ row, column, gameMode }) => {
   const filteredOnPawnClick = (pawn) =>
     pawn.team === data.nextMove && onPawnClick(pawn);
 
+  !winner && data.isFinished && data.winner && setWinner(data.winner);
+
   return (
     <>
-      <TurnInfo nextMove={data.nextMove} gameMode={gameMode} />
+      <TurnInfo nextMove={data.nextMove} gameMode={gameMode} winner={winner} />
       <div className="Board">
         <BoardBackground
           row={row}
