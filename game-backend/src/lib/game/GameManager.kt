@@ -1,7 +1,6 @@
 package lib.game
 
 import algorithm.getPossibleMoves
-import algorithm.getPossibleMovesOfTeam
 import lib.pawns.toPawn
 import lib.pawns.toPawnView
 import lib.pawns.toPosition
@@ -10,9 +9,10 @@ import lib.position.isCorrect
 
 fun Game.toGameView(): GameView {
     val pawnsView = this.pawns.map {
+        val moves = this.possibleMoves[it.key]?.map { m -> m.destination }
         it
             .value
-            .toPawnView(this.possibleMoves[it.key] ?: emptyList())
+            .toPawnView(moves ?: emptyList())
 
     }
     return GameView(
@@ -54,6 +54,7 @@ fun Move.isValid(game:Game): Boolean {
     }
     val isMoveAsPossibleMove = game
         .possibleMoves[movedPawn.toPosition()]
+        ?.map { it.destination }
         ?.contains(destination) ?: false
     val isMoveWithCorrectTeam = game.nextMove == this.pawn.team
 

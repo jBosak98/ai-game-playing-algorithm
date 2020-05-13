@@ -2,21 +2,23 @@ package algorithm
 
 import lib.Team.Team
 import lib.Team.opposite
+import lib.game.PossibleMove
 import lib.list.maybeFirst
-import lib.position.isCorrect
 import lib.pawns.Pawn
 import lib.pawns.Pawns
 import lib.pawns.fieldOccupiedByTeam
 import lib.pawns.isFieldOccupied
 import lib.position.Position
+import lib.position.isCorrect
 import lib.tools.getTheBestCaptureSet
+
 
 fun getCaptureMoves(
     position: Position,
     team: Team,
-    pawns: Map<Position, Pawn>,
+    pawns: Pawns,
     capturedPawns: Int
-): List<Pair<Position, Int>> {
+): List<PossibleMove> {
     val filterFieldsOccupiedByTheSameTeam = fun(movePosition: Position): Boolean {
         return pawns.fieldOccupiedByTeam(movePosition) === team.opposite()
     }
@@ -29,20 +31,30 @@ fun getCaptureMoves(
     val filterOccupiedFields = fun(position: Position): Boolean {
         return !pawns.isFieldOccupied(position) && position.isCorrect()
     }
-    val getPairOfMoveWithKills = fun(destination: Position): Pair<Position, Int> {
-        return Pair(destination, capturedPawns + 1)
+    val getPairOfMoveWithKills = fun(destination: Position): PossibleMove {
+        val movedPawn = pawns[position] ?: return PossibleMove(position, capturedPawns, pawns)
+        val newPawn = Pawn(
+            destination.row,
+            destination.column,
+            movedPawn.team,
+            movedPawn.isKing,
+            emptyList()
+        )
+        val pawnsMoved = pawns.toMutableMap().also { it[destination] = newPawn }
+        val filteredPawns = filterCapturedPawn(position, destination, pawnsMoved)
+        return PossibleMove(destination, capturedPawns + 1, filteredPawns)
     }
 
-    val getMultiCaptureMoves = fun(singleCapture: Pair<Position, Int>): List<Pair<Position, Int>> {
-        val (move, kills) = singleCapture
-        val filteredPawns = filterCapturedPawn(position, move, pawns)
+    val getMultiCaptureMoves = fun(singleCapture: PossibleMove): List<PossibleMove> {
+        val (move, kills, pawnsAfterCapture) = singleCapture
+        val filteredPawns = filterCapturedPawn(position, move, pawnsAfterCapture)
         return getCaptureMoves(move, team, filteredPawns, kills)
     }
 
     val getTheLongestCaptures =
-        fun(acc: List<Pair<Position, Int>>, item: Pair<Position, Int>): List<Pair<Position, Int>> {
-            val itemKills = item.second
-            val accKills = acc.maybeFirst()?.second ?: -1
+        fun(acc: List<PossibleMove>, item: PossibleMove): List<PossibleMove> {
+            val itemKills = item.captures
+            val accKills = acc.maybeFirst()?.captures ?: -1
             return getTheBestCaptureSet(accKills, itemKills, item, acc)
         }
 
