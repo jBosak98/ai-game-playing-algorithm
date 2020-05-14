@@ -1,45 +1,36 @@
 import React, { useState } from "react";
-import useWebSocket from "react-use-websocket";
-import Pawn from "./Pawn";
-import BoardBackground from "./BoardBackground";
 import "./Board.scss";
+import BoardBackground from "./BoardBackground";
 import Loader from "./Loader";
-import printConnectionStatus from "../lib/printConnectionStatus";
-import { socketUrl } from "../lib/constants";
+import Pawn from "./Pawn";
 import TurnInfo from "./TurnInfo";
+import createConfig from "../lib/createConfig";
+import makeMove from "../actions/makeMove";
 import sendConfig from "../actions/sendConfig";
-import shouldComputerMove from '../lib/shouldComputerMove';
-import makeMove from '../actions/makeMove';
-import createConfig from '../lib/createConfig';
+import useCheckers from "../hooks/useCheckers";
+import { socketUrl } from "../lib/constants";
 
 const Board = ({ row, column, gameMode }) => {
   const [clickedPawn, onPawnClick] = useState(undefined);
-  const [winner, setWinner] = useState(undefined);
-  const [sendMessage, lastMessage, readyState, getWebSocket] = useWebSocket(
-    socketUrl
+  const [sendMessage, data, isComputerMove, winner] = useCheckers(
+    socketUrl,
+    true
   );
-
-  printConnectionStatus(readyState);
-  const data = parseData(lastMessage);
 
   if (!data) return <Loader />;
   if (!data.config) sendConfig(sendMessage, data, createConfig(gameMode));
 
-  const isComputerMove = shouldComputerMove(data);
   const onBoardFieldClick =
-    (!isComputerMove &&
-      makeMove({
-        data,
-        clickedPawn,
-        sendMessage,
-      })) ||
-    (() => {});
+    !isComputerMove &&
+    makeMove({
+      data,
+      clickedPawn,
+      sendMessage,
+    });
   const pawns = getPawns(data);
 
   const filteredOnPawnClick = (pawn) =>
     pawn.team === data.nextMove && onPawnClick(pawn);
-
-  !winner && data.isFinished && data.winner && setWinner(data.winner);
 
   return (
     <>
@@ -58,10 +49,6 @@ const Board = ({ row, column, gameMode }) => {
     </>
   );
 };
-
-
-const parseData = (lastMessage) =>
-  lastMessage && lastMessage.data && JSON.parse(lastMessage.data);
 
 const getPawns = (data) => [...Object.entries(data.pawns).map((x) => x[1])];
 
