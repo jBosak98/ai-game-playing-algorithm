@@ -1,15 +1,8 @@
 import { gameModes } from "./constants";
 
-const sendMessageWithConfig = (sendMessage, data, gameMode) => {
-  const message = {
-    board: {
-      config: {
-        players: getPlayers(gameMode),
-      },
-      ...data,
-    },
-  };
-  sendMessage(JSON.stringify(message));
+
+const createConfig = (gameMode) => {
+  return { players: getPlayers(gameMode) };
 };
 
 const getPlayers = (gameMode) => {
@@ -34,4 +27,5 @@ const getPlayers = (gameMode) => {
   return [blackPlayer, whitePlayer];
 };
 
-export default sendMessageWithConfig;
+
+export default createConfig;

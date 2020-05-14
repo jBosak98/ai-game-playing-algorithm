@@ -7,7 +7,10 @@ import Loader from "./Loader";
 import printConnectionStatus from "../lib/printConnectionStatus";
 import { socketUrl } from "../lib/constants";
 import TurnInfo from "./TurnInfo";
-import sendMessageWithConfig from "../lib/sendMessageWithConfig";
+import sendConfig from "../actions/sendConfig";
+import shouldComputerMove from '../lib/shouldComputerMove';
+import makeMove from '../actions/makeMove';
+import createConfig from '../lib/createConfig';
 
 const Board = ({ row, column, gameMode }) => {
   const [clickedPawn, onPawnClick] = useState(undefined);
@@ -20,13 +23,17 @@ const Board = ({ row, column, gameMode }) => {
   const data = parseData(lastMessage);
 
   if (!data) return <Loader />;
-  if (!data.config) sendMessageWithConfig(sendMessage, data, gameMode);
+  if (!data.config) sendConfig(sendMessage, data, createConfig(gameMode));
 
-  const onBoardFieldClick = getOnBoardFieldClick({
-    data,
-    clickedPawn,
-    sendMessage,
-  });
+  const isComputerMove = shouldComputerMove(data);
+  const onBoardFieldClick =
+    (!isComputerMove &&
+      makeMove({
+        data,
+        clickedPawn,
+        sendMessage,
+      })) ||
+    (() => {});
   const pawns = getPawns(data);
 
   const filteredOnPawnClick = (pawn) =>
@@ -52,21 +59,6 @@ const Board = ({ row, column, gameMode }) => {
   );
 };
 
-const getOnBoardFieldClick = ({ data, clickedPawn, sendMessage }) => (
-  destination
-) => {
-  const message = {
-    board: data,
-    move: {
-      pawn: clickedPawn,
-      destination: {
-        row: destination.rowNumber,
-        column: destination.columnNumber,
-      },
-    },
-  };
-  sendMessage(JSON.stringify(message));
-};
 
 const parseData = (lastMessage) =>
   lastMessage && lastMessage.data && JSON.parse(lastMessage.data);
