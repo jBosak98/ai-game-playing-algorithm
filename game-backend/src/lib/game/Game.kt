@@ -9,7 +9,7 @@ data class Game (
     val pawns:Map<Position, Pawn>,
     val nextMove: Team,
     val isFinished:Boolean,
-    val possibleMoves: Map<Position,List<PossibleMove>>,
+    val possibleMoves: Map<Position,PossibleMoves>,
     val winner:Team? = null,
     val config: GameConfig?
 )
