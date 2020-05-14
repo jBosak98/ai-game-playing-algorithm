@@ -19,7 +19,8 @@ fun Game.toGameView(): GameView {
         pawns = pawnsView,
         nextMove = this.nextMove,
         isFinished = this.isFinished,
-        winner = this.winner
+        winner = this.winner,
+        config = this.config
     )
 }
 
@@ -29,7 +30,8 @@ fun GameView.toGame(): Game{
         pawns = pawns,
         nextMove = this.nextMove,
         isFinished = this.isFinished,
-        possibleMoves = getPossibleMoves(pawns)
+        possibleMoves = getPossibleMoves(pawns),
+        config = this.config
     )
 }
 
@@ -39,7 +41,8 @@ fun GameWithMove.toGame():Game{
         pawns = pawns,
         nextMove = this.board.nextMove,
         isFinished = this.board.isFinished,
-        possibleMoves = getPossibleMoves(pawns)
+        possibleMoves = getPossibleMoves(pawns),
+        config = this.board.config
     )
 
 }
@@ -68,6 +71,6 @@ fun Move.isValid(game:Game): Boolean {
 }
 fun GameWithMove.isValid(): Boolean {
     val arePawnsPositionCorrect = board.pawns.all { Position(it.row, it.column).isCorrect() }
-    val isMovePositionCorrect = this.move.destination.isCorrect()
+    val isMovePositionCorrect = this.move?.destination?.isCorrect() ?: false
     return arePawnsPositionCorrect && isMovePositionCorrect
 }

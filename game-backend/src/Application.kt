@@ -1,9 +1,7 @@
 package com.wust.game.playing.algorithm.jbosak
 
-import algorithm.getPossibleMoves
 import algorithm.makeMove
 import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
 import createGame
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -12,7 +10,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.defaultSerializer
 import io.ktor.http.ContentType
 import io.ktor.http.cio.websocket.*
 import io.ktor.response.respondText
@@ -20,11 +17,8 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.websocket.webSocket
 import lib.Gson.isValid
-import lib.Team.Team
-import lib.Team.opposite
-import lib.game.*
-import lib.pawns.Pawn
-import lib.pawns.toPosition
+import lib.game.GameWithMove
+import lib.game.toGameView
 import java.time.Duration
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -57,8 +51,15 @@ fun Application.module(testing: Boolean = false) {
             for (frame in incoming) {
                 val inputGame = handleIncomingFrame(frame, gson)
                 if(inputGame != null){
-                    send(gson.toJson(makeMove(inputGame)))
+                    when(inputGame.move){
+                        null -> send(gson.toJson(inputGame.board))
+                        else -> send(gson.toJson(makeMove(inputGame)))
+                    }
+
                 }
+
+
+
 
             }
         }

@@ -7,7 +7,7 @@ import lib.pawns.*
 fun makeMove(gameWithMove: GameWithMove): GameView {
     val game = gameWithMove.toGame()
     val move = gameWithMove.move
-    if (gameWithMove.isValid() && move.isValid(game)) {
+    if (gameWithMove.isValid() && move?.isValid(game)!!) {
         val newGame = makeMove(game, move)
         return newGame.toGameView()
     }
@@ -33,6 +33,7 @@ fun makeMove(game: Game, move: Move): Game {
         nextMove = game.nextMove.opposite(),
         isFinished = isFinished,
         possibleMoves = possibleMoves,
-        winner = if(isFinished) getWinner(pawns, possibleMoves) else null
+        winner = if(isFinished) getWinner(pawns, possibleMoves) else null,
+        config = game.config
     )
 }
