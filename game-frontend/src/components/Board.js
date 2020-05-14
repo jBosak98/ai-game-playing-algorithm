@@ -7,6 +7,7 @@ import Loader from "./Loader";
 import printConnectionStatus from "../lib/printConnectionStatus";
 import { socketUrl } from "../lib/constants";
 import TurnInfo from "./TurnInfo";
+import sendMessageWithConfig from "../lib/sendMessageWithConfig";
 
 const Board = ({ row, column, gameMode }) => {
   const [clickedPawn, onPawnClick] = useState(undefined);
@@ -19,6 +20,7 @@ const Board = ({ row, column, gameMode }) => {
   const data = parseData(lastMessage);
 
   if (!data) return <Loader />;
+  if (!data.config) sendMessageWithConfig(sendMessage, data, gameMode);
 
   const onBoardFieldClick = getOnBoardFieldClick({
     data,

@@ -1,15 +1,12 @@
 import React from "react";
-import {
-  gameModeAiVsAi,
-  gameModeAiVsPlayer,
-  gameModePlayerVsPlayer,
-} from "../lib/constants";
+import { gameModes } from "../lib/constants";
 
 const getPlayerTurnType = (nextMove, gameMode) => {
-  if (gameMode === gameModeAiVsAi) return "Computer";
-  if (gameMode === gameModeAiVsPlayer)
+  const { aiVsAi, aiVsPlayer, playerVsPlayer } = gameModes;
+  if (gameMode === aiVsAi) return "Computer";
+  if (gameMode === aiVsPlayer)
     return nextMove === "BLACK" ? "Computer" : "Player";
-  if (gameMode === gameModePlayerVsPlayer) return "Player";
+  if (gameMode === playerVsPlayer) return "Player";
   return "";
 };
 
