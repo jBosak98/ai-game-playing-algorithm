@@ -1,6 +1,7 @@
 package lib.game
 
 import algorithm.getPossibleMoves
+import lib.pawns.Pawn
 import lib.pawns.toPawn
 import lib.pawns.toPawnView
 import lib.pawns.toPosition
@@ -47,7 +48,9 @@ fun GameWithMove.toGame():Game{
 
 }
 fun Move.isValid(game:Game): Boolean {
-    val movedPawn = this.pawn
+    val movedPawn: Pawn? = this.pawn
+    if(movedPawn == null) return false
+    
     val isPawnPositionCorrect = movedPawn.toPosition().isCorrect()
     val isDestinationCorrect = this.destination.isCorrect()
     val isPawnInBoard = game.pawns.any {
