@@ -6,19 +6,16 @@ import Pawn from "./Pawn";
 import TurnInfo from "./TurnInfo";
 import createConfig from "../lib/createConfig";
 import makeMove from "../actions/makeMove";
-import sendConfig from "../actions/sendConfig";
 import useCheckers from "../hooks/useCheckers";
 import { socketUrl } from "../lib/constants";
+import shouldComputerMove from "../lib/shouldComputerMove";
 
 const Board = ({ row, column, gameMode }) => {
   const [clickedPawn, onPawnClick] = useState(undefined);
-  const [sendMessage, data, isComputerMove, winner] = useCheckers(
-    socketUrl,
-    true
-  );
-
+  const config = createConfig(gameMode);
+  const [sendMessage, data, winner] = useCheckers(socketUrl, false, config);
   if (!data) return <Loader />;
-  if (!data.config) sendConfig(sendMessage, data, createConfig(gameMode));
+  const isComputerMove = shouldComputerMove(data);
 
   const onBoardFieldClick =
     (!isComputerMove &&
@@ -27,7 +24,8 @@ const Board = ({ row, column, gameMode }) => {
         clickedPawn,
         sendMessage,
       })) ||
-    (() => ({}));
+    (() => {});
+    
   const pawns = getPawns(data);
 
   const filteredOnPawnClick = (pawn) =>
