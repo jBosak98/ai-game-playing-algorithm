@@ -9,5 +9,10 @@
     height: 100px;
     margin: 10px;
     border-radius: 60px;
+    > svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
   }
 }
