@@ -21,12 +21,13 @@ const Board = ({ row, column, gameMode }) => {
   if (!data.config) sendConfig(sendMessage, data, createConfig(gameMode));
 
   const onBoardFieldClick =
-    !isComputerMove &&
-    makeMove({
-      data,
-      clickedPawn,
-      sendMessage,
-    });
+    (!isComputerMove &&
+      makeMove({
+        data,
+        clickedPawn,
+        sendMessage,
+      })) ||
+    (() => ({}));
   const pawns = getPawns(data);
 
   const filteredOnPawnClick = (pawn) =>

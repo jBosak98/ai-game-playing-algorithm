@@ -23,7 +23,6 @@ const getPlayers = (gameMode) => {
     algorithmType: (whitePlayerType === "COMPUTER" && "MIN_MAX") || null,
     depth: (whitePlayerType === "COMPUTER" && 1) || null,
   };
-  console.log(blackPlayer);
   return [blackPlayer, whitePlayer];
 };
 
