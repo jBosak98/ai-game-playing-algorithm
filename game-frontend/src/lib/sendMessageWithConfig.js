@@ -1,4 +1,12 @@
-import { gameModes } from "./constants";
+import {
+  gameModes,
+  PLAYER_TYPE_COMPUTER,
+  PLAYER_TYPE_PLAYER,
+  ALGORITHM_MIN_MAX,
+  ALGORITHM_ALPHA_BETA,
+  COLOR_WHITE,
+  COLOR_BLACK,
+} from "./constants";
 
 const sendMessageWithConfig = (sendMessage, data, gameMode) => {
   const message = {
@@ -15,20 +23,25 @@ const sendMessageWithConfig = (sendMessage, data, gameMode) => {
 const getPlayers = (gameMode) => {
   const { aiVsAi, aiVsPlayer, playerVsPlayer } = gameModes;
 
-  const blackPlayerType = gameMode === playerVsPlayer ? "PLAYER" : "COMPUTER";
-  const whitePlayerType = gameMode === aiVsAi ? "COMPUTER" : "PLAYER";
+  const blackPlayerType =
+    gameMode === playerVsPlayer ? PLAYER_TYPE_PLAYER : PLAYER_TYPE_COMPUTER;
+  const whitePlayerType =
+    gameMode === aiVsAi ? PLAYER_TYPE_COMPUTER : PLAYER_TYPE_PLAYER;
 
   const blackPlayer = {
-    team: "BLACK",
+    team: COLOR_BLACK,
     playerType: blackPlayerType,
-    algorithmType: (blackPlayerType === "COMPUTER" && "ALPHA_BETA") || null,
-    depth: (blackPlayerType === "COMPUTER" && 1) || null,
+    algorithmType:
+      (blackPlayerType === PLAYER_TYPE_COMPUTER && ALGORITHM_ALPHA_BETA) ||
+      null,
+    depth: (blackPlayerType === PLAYER_TYPE_COMPUTER && 1) || null,
   };
   const whitePlayer = {
-    team: "WHITE",
+    team: COLOR_WHITE,
     playerType: whitePlayerType,
-    algorithmType: (whitePlayerType === "COMPUTER" && "MIN_MAX") || null,
-    depth: (whitePlayerType === "COMPUTER" && 1) || null,
+    algorithmType:
+      (whitePlayerType === PLAYER_TYPE_COMPUTER && ALGORITHM_MIN_MAX) || null,
+    depth: (whitePlayerType === PLAYER_TYPE_COMPUTER && 1) || null,
   };
   console.log(blackPlayer);
   return [blackPlayer, whitePlayer];

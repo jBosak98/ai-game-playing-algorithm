@@ -1,5 +1,7 @@
 import React from "react";
 
+import { COLOR_BLACK } from "../lib/constants";
+
 import "./Pawn.scss";
 
 const Pawn = ({ details, onPawnClick }) => {
@@ -17,7 +19,7 @@ const Pawn = ({ details, onPawnClick }) => {
 
 const getStyleFromPawnDetails = ({ row, column, color, team }) => {
   const fieldSizePx = 120;
-  const isBlack = team === "BLACK";
+  const isBlack = team === COLOR_BLACK;
   const top = `${row * fieldSizePx}px`;
   const left = `${column * fieldSizePx}px`;
   return { top, left, isBlack };
