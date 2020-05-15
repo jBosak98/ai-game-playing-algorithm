@@ -6,7 +6,7 @@ import lib.game.GameWithMove
 
 fun <T> Gson.isValid(json: String, c: Class<T>): Boolean =
     try {
-        this.fromJson(json, GameWithMove::class.java)
+        this.fromJson(json, c)
         true
     } catch (jsonSyntaxException: JsonSyntaxException) {
         false
