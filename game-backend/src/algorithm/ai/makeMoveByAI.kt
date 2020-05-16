@@ -31,12 +31,13 @@ fun makeMoveByAI(game:Game):Game {
         .filter { it.second.isNotEmpty() }
         .shuffled()
         .maybeFirst()!!
-    if(shouldAIMakeMove(game) && firstMove.second.isNotEmpty()){
+
+    val aiConfig = game.config?.players?.find { it.team == game.nextMove }
+
+    if(shouldAIMakeMove(game) && firstMove.second.isNotEmpty() && aiConfig != null && aiConfig.depth != null){
         val possibleMove = firstMove.second.shuffled().first()
-        val move = if(game.config?.players?.find { it.team == game.nextMove }?.algorithmType == AlgorithmType.MIN_MAX)
-            minmax(game,game.nextMove,4)
-
-
+        val move = if(aiConfig.algorithmType == AlgorithmType.MIN_MAX)
+            minmax(game,game.nextMove,aiConfig.depth)
         else
             Move(firstMove.first, possibleMove.destination)
 
