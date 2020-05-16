@@ -4,10 +4,11 @@ import Board from "./components/Board";
 import GameModeSelection from './components/GameModeSelection';
 
 function App() {  
-  const [gameMode, setGameMode] = useState(false);
+  const [gameMode, setGameMode] = useState({});
+  const [isStarted, start] = useState(false);
 
-  if(!gameMode){
-    return <GameModeSelection setGameMode={setGameMode}/>
+  if(!gameMode.mode || !isStarted){
+    return <GameModeSelection start={start} setGameMode={setGameMode} gameMode={gameMode}/>
   }
 
   return (
