@@ -3,10 +3,9 @@ package algorithm.ai
 import algorithm.evaluateGame
 import algorithm.makeMove
 import lib.Team.Team
-import lib.Team.opposite
 import lib.game.Game
 import lib.game.Move
-import lib.pawns.getPawns
+import lib.game.getListOfMoves
 import kotlin.math.max
 import kotlin.math.min
 
@@ -25,48 +24,45 @@ private fun winnerScore(winner: Team?, player: Team, depth: Int): Int =
     }
 
 fun minmax(game: Game, team: Team, maxDepth: Int): Move {
-    val moves = getMoves(game)
-    val bestMoves = moves.fold(listOf<Pair<Move, Int>>()) { acc, move ->
-        val score = minmax(game, move, 1, team, maxDepth)
-        when {
+    val minMaxAlgorithm = minMaxInit(maxDepth, team)
+    val getOptimalMoves = fun(acc:List<Pair<Move, Int>>, move:Move): List<Pair<Move, Int>> {
+        val score = minMaxAlgorithm(game, move, 1)
+        return when {
             acc.isEmpty() -> listOf(Pair(move, score))
             acc.first().second < score -> listOf(Pair(move, score))
             acc.first().second == score -> acc + Pair(move, score)
             acc.first().second > score -> acc
             else -> listOf(Pair(move, score))
         }
-
     }
-    return bestMoves.first().first
+    return game
+        .getListOfMoves()
+        .fold(emptyList(), getOptimalMoves)
+        .shuffled()//moves in this collection have the same (which is the best) score
+        .first()// so I'm taking the random move with score
+        .first //means that I'm taking the Move, not the score nor move with score
+
 }
 
-fun minmax(game: Game, move: Move, depth: Int, team: Team, maxDepth: Int): Int {
-    val gameAfterMove = makeMove(game, move)
-
-    if (gameAfterMove.isFinished)
-        return winnerScore(gameAfterMove.winner, gameAfterMove.nextMove, depth)
-    if (depth >= maxDepth)
-        return evaluateGame(gameAfterMove, gameAfterMove.nextMove)
-
-    val isMax = gameAfterMove.nextMove == team
-    val bestScore = if (isMax) Int.MIN_VALUE else Int.MAX_VALUE
-
-    return getMoves(gameAfterMove)
-        .map { minmax(gameAfterMove, it, depth + 1, team, maxDepth) }
-        .fold(bestScore, minOrMaxFunction(isMax))
+private fun minMaxInit(maxDepth: Int, team:Team): (Game, Move, Int) -> Int {
+    fun minMaxGenerator(game:Game, depth:Int): (Move) -> Int =
+        fun (move:Move): Int {
+            val gameAfterMove = makeMove(game, move)
+            val isMax = gameAfterMove.nextMove == team
+            val bestScore = if (isMax) Int.MIN_VALUE else Int.MAX_VALUE
+            val minMaxFunction = minMaxGenerator(gameAfterMove, depth + 1)
+            return when {
+                gameAfterMove.isFinished -> winnerScore(gameAfterMove.winner, gameAfterMove.nextMove, depth)
+                depth >= maxDepth -> evaluateGame(gameAfterMove, gameAfterMove.nextMove)
+                else -> gameAfterMove
+                    .getListOfMoves()
+                    .map(minMaxFunction)
+                    .fold(bestScore, minOrMaxFunction(isMax))
+            }
+        }
+    return fun(game: Game, move: Move, depth: Int) = minMaxGenerator(game, depth)(move)
 }
 
 
-private fun getMoves(game: Game) =
-    game.pawns.getPawns(game.nextMove)
-        .filter {
-            game.possibleMoves.keys.contains(it.key)
-        }
-        .map {
-            it.value to game.possibleMoves.getValue(it.key)
-        }.toList()
-        .flatMap { it.second.map { move -> Pair(it.first, move) } }
-        .map {
-            Move(it.first, it.second.destination)
-        }
+
 

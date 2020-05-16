@@ -1,10 +1,7 @@
 package lib.game
 
 import algorithm.getPossibleMoves
-import lib.pawns.Pawn
-import lib.pawns.toPawn
-import lib.pawns.toPawnView
-import lib.pawns.toPosition
+import lib.pawns.*
 import lib.position.Position
 import lib.position.isCorrect
 
@@ -77,3 +74,15 @@ fun GameWithMove.isValid(): Boolean {
     val isMovePositionCorrect = this.move?.destination?.isCorrect() ?: false
     return arePawnsPositionCorrect && isMovePositionCorrect
 }
+
+fun Game.getListOfMoves() =
+    this
+        .pawns
+        .getPawns(this.nextMove)
+        .filter { this.possibleMoves.keys.contains(it.key) }
+        .flatMap {
+            this
+                .possibleMoves
+                .getValue(it.key)
+                .map { move -> Move(it.value, move.destination) }
+        }
