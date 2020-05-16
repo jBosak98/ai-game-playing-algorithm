@@ -1,6 +1,8 @@
 package com.wust.game.playing.algorithm.jbosak
 
+import algorithm.ai.makeMoveByAI
 import algorithm.makeMove
+import algorithm.shouldAIMakeMove
 import com.google.gson.Gson
 import createGame
 import io.ktor.application.Application
@@ -16,8 +18,11 @@ import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.websocket.webSocket
+import kotlinx.coroutines.delay
 import lib.Gson.isValid
 import lib.game.GameWithMove
+import lib.game.Move
+import lib.game.toGame
 import lib.game.toGameView
 import java.time.Duration
 
@@ -49,11 +54,12 @@ fun Application.module(testing: Boolean = false) {
                 .toGameView()
             outgoing.send(Frame.Text(gson.toJson(game)))
             for (frame in incoming) {
+
                 val inputGame = handleIncomingFrame(frame, gson)
                 if(inputGame != null){
                     when(inputGame.move){
-                        null -> send(gson.toJson(inputGame.board))
-                        else -> send(gson.toJson(makeMove(inputGame)))
+                        is Move -> send(gson.toJson(makeMove(inputGame)))
+                        null -> send(gson.toJson(makeMoveByAI(inputGame.board.toGame()).toGameView()))
                     }
 
                 }
