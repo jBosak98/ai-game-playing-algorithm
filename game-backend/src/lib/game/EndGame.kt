@@ -9,15 +9,15 @@ fun getWinner(pawns: Pawns, possibleMoves: Map<InitPosition, PossibleMoves>): Te
     when{
         pawns.getPawns(Team.BLACK).isEmpty() -> Team.WHITE
         pawns.getPawns(Team.WHITE).isEmpty() -> Team.BLACK
-        pawns.getPawns(Team.WHITE).map { possibleMoves[it.key].orEmpty() }.isEmpty() -> Team.BLACK
-        pawns.getPawns(Team.BLACK).map { possibleMoves[it.key].orEmpty() }.isEmpty()  -> Team.WHITE
+        pawns.getPawns(Team.WHITE).filterNot { possibleMoves[it.key].isNullOrEmpty() }.isEmpty() -> Team.BLACK
+        pawns.getPawns(Team.BLACK).filterNot { possibleMoves[it.key].isNullOrEmpty() }.isEmpty()  -> Team.WHITE
         else -> null
     }
 
 fun isFinished(pawns:Pawns, possibleMoves: Map<InitPosition, PossibleMoves>):Boolean{
     return  pawns.getPawns(Team.BLACK).isEmpty() ||
             pawns.getPawns(Team.WHITE).isEmpty() ||
-            pawns.getPawns(Team.WHITE).map { possibleMoves[it.key].orEmpty() }.isEmpty() ||
-            pawns.getPawns(Team.BLACK).map { possibleMoves[it.key].orEmpty() }.isEmpty()
+            pawns.getPawns(Team.WHITE).filterNot { possibleMoves[it.key].isNullOrEmpty() }.isEmpty() ||
+            pawns.getPawns(Team.BLACK).filterNot { possibleMoves[it.key].isNullOrEmpty() }.isEmpty()
 }
 
