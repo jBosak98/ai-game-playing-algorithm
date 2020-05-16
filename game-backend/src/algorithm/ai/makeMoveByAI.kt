@@ -2,9 +2,8 @@ package algorithm.ai
 
 import algorithm.makeMove
 import algorithm.shouldAIMakeMove
-import kotlinx.coroutines.delay
-import lib.Team.opposite
 import lib.game.*
+import lib.gameConfig.AlgorithmType
 import lib.list.maybeFirst
 import lib.pawns.getPawns
 
@@ -15,8 +14,8 @@ fun makeMoveByAI(game:Game):Game {
         }
         .map {
         it.value to game.possibleMoves.getValue(it.key)
-    }
-    if(possibleMoves.isEmpty()){
+    }.filter { it.second.isNotEmpty() }
+    if(possibleMoves.isEmpty() && possibleMoves.all { it.second.isEmpty() }){
         val isFinished = isFinished(game.pawns, game.possibleMoves)
         return Game(
             pawns = game.pawns,
@@ -27,10 +26,20 @@ fun makeMoveByAI(game:Game):Game {
             config = game.config
         )
     }
-    val firstMove = possibleMoves.toList().filter { it.second.isNotEmpty() }.maybeFirst()!!
+    val firstMove = possibleMoves
+        .toList()
+        .filter { it.second.isNotEmpty() }
+        .shuffled()
+        .maybeFirst()!!
     if(shouldAIMakeMove(game) && firstMove.second.isNotEmpty()){
-        val possibleMove = firstMove.second.first()
-        val move = Move(firstMove.first, possibleMove.destination)
+        val possibleMove = firstMove.second.shuffled().first()
+        val move = if(game.config?.players?.find { it.team == game.nextMove }?.algorithmType == AlgorithmType.MIN_MAX)
+            minmax(game,game.nextMove,4)
+
+
+        else
+            Move(firstMove.first, possibleMove.destination)
+
         return makeMove(game, move)
     }
     return game

@@ -19,14 +19,16 @@ fun evaluateGame(game:Game, team:Team):Int {
     val pointsForFirstRow = pawns.filter { it.value.team.firstRow() == it.value.row }.count()
     val possibleMoves = game.possibleMoves.flatMap(getPossibleMovesFromGame(pawns)).count()
 
-    val sum = //pointsForNumberOfPawns +
+    val sum = differenceBetweenNumberOfPawns
+    //pointsForNumberOfPawns// +
 //                pointsForEnemiesPawns +
-        differenceBetweenNumberOfPawns +
-                pointsForFirstRow
+//        differenceBetweenNumberOfPawns +
+//                pointsForFirstRow
 
     return when {
-        pointsForNumberOfPawns == 0 || possibleMoves == 0 -> Int.MIN_VALUE
-        possibleMoves in 1..2 -> sum * 3 / 4
+        pointsForNumberOfPawns == 0// || possibleMoves == 0
+        -> Int.MIN_VALUE
+//        possibleMoves in 1..2 -> sum * 3 / 4
         else -> sum
     }
 
@@ -45,4 +47,4 @@ private fun getPossibleMovesFromGame(pawns:Pawns): (Map.Entry<Position, Possible
 }
 
 private fun getPointsForNumberOfPawns(pawns:Pawns) =
-    pawns.map { if(it.value.isKing) 2 else 1 }.count()
+    pawns.map { if(it.value.isKing) 2 else 1 }.sum()
