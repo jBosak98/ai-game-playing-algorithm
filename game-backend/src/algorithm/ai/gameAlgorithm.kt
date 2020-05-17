@@ -16,7 +16,7 @@ fun gameAlgorithm(isAlphaBeta: Boolean): (Game, Team, Int) -> Move {
 
         val getOptimalMoves = fun(acc: List<Pair<Move, Int>>, move: Move): List<Pair<Move, Int>> {
             val alpha =
-                if(isAlphaBeta) gameAlgorithm(game, move, 1, initialAlpha, beta)
+                if (isAlphaBeta) gameAlgorithm(game, move, 1, initialAlpha, beta)
                 else gameAlgorithm(game, move, 1, null, null)//in minMax algorithm, it is score
 
             return when {
@@ -70,7 +70,10 @@ private fun gameAlgorithmInit(maxDepth: Int, team: Team): (Game, Move, Int, Int?
         gameAlgorithmGenerator(game, depth)(move, alpha, beta)
 }
 
-private fun evaluateNextMoveGenerator(isMax: Boolean, minMax: (Move, Int?, Int?) -> Int): (GameAlgorithmInput, Move) -> GameAlgorithmInput {
+private fun evaluateNextMoveGenerator(
+    isMax: Boolean,
+    minMax: (Move, Int?, Int?) -> Int
+): (GameAlgorithmInput, Move) -> GameAlgorithmInput {
     val getTheBest = minOrMaxFunction(isMax)
     return fun(params: GameAlgorithmInput, nextMove: Move): GameAlgorithmInput {
         return when (params) {
@@ -89,7 +92,7 @@ private fun evaluateNextMoveGenerator(isMax: Boolean, minMax: (Move, Int?, Int?)
     }
 }
 
-private fun getInitParameter(isAlphaBeta:Boolean,bestScore:Int, alpha:Int? = null,beta:Int? = null) =
+private fun getInitParameter(isAlphaBeta: Boolean, bestScore: Int, alpha: Int? = null, beta: Int? = null) =
     if (isAlphaBeta) GameAlgorithmInput.AlphaBetaInput(alpha!!, beta!!, bestScore)
     else GameAlgorithmInput.MinMaxInput(bestScore)
 
