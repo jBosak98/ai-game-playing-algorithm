@@ -37,14 +37,13 @@ fun makeMoveByAI(game:Game):Game {
     if(shouldAIMakeMove(game) && firstMove.second.isNotEmpty() && aiConfig != null && aiConfig.depth != null){
         val possibleMove = firstMove.second.shuffled().first()
 
-        val move = when(aiConfig.algorithmType){
-            AlgorithmType.MIN_MAX -> minmax(game,game.nextMove,aiConfig.depth)
-//            AlgorithmType.ALPHA_BETA -> alphaBeta(game,game.nextMove,aiConfig.depth)
-            else -> Move(firstMove.first, possibleMove.destination)//if error, then random
+        val algorithm = when(aiConfig.algorithmType){
+            AlgorithmType.MIN_MAX -> gameAlgorithm(isAlphaBeta = false)
+            AlgorithmType.ALPHA_BETA -> gameAlgorithm(isAlphaBeta = true)
+            else ->{ _,_,_ -> Move(firstMove.first, possibleMove.destination) } //if error, then random
         }
 
-
-
+        val move = algorithm(game,game.nextMove,aiConfig.depth)
         return makeMove(game, move)
     }
     return game
