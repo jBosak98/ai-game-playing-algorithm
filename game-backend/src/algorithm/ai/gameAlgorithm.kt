@@ -36,6 +36,28 @@ fun gameAlgorithm(isAlphaBeta: Boolean): (Game, Team, Int) -> Move {
 
     }
 }
+/**
+ * min-max pseudocode
+ * function minmax(game,move, depth, maxDepth, isMax){
+ *      game.makeMove(move)
+ *      if(depth >= maxDepth) return game.evaluate()
+ *
+ *      result = isMax ? -Infinity : Infinity
+ *
+ *      foreach nextMove <- game.possibleMoves{
+ *          stateScore = minMax(game, nextMove, depth + 1, maxDepth, !isMax)
+ *          if(isMax){
+ *               if(stateScore > result)
+ *                  result = stateScore
+ *          }else{
+ *              if(stateScore < result)
+ *                  result = stateScore
+ *
+ *          }
+ *      }
+ *      return result
+ * }
+ */
 
 private fun gameAlgorithmInit(maxDepth: Int, team: Team): (Game, Move, Int, Int?, Int?) -> Int {
     fun gameAlgorithmGenerator(game: Game, depth: Int): (Move, Int?, Int?) -> Int =
@@ -97,3 +119,30 @@ private fun getInitParameter(isAlphaBeta: Boolean, bestScore: Int, alpha: Int? =
     else GameAlgorithmInput.MinMaxInput(bestScore)
 
 
+/**
+ * alpha-beta pseudocode
+ * function minmax(game,move, depth, maxDepth, isMax, alpha, beta){
+ *      game.makeMove(move)
+ *      if(depth >= maxDepth) return game.evaluate()
+ *
+ *      result = isMax ? alpha : beta
+ *
+ *      foreach nextMove <- game.possibleMoves{
+ *          stateScore = minMax(game, nextMove, depth + 1, maxDepth, !isMax, alpha, beta)
+ *          if(isMax){
+ *               if(stateScore > result){
+ *                  alpha = stateScore
+ *                  result = stateScore
+ *               }
+ *          }else{
+ *              if(stateScore < result){
+ *                  beta = result
+ *                  result = stateScore
+ *              }
+ *          }
+ *          if(alpha >= beta)
+ *              break
+ *      }
+ *      return result
+ * }
+ */
