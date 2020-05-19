@@ -10,6 +10,20 @@ import lib.pawns.getPawns
 import lib.position.Position
 
 fun evaluateGame(game:Game, team:Team):Int {
+    val pawns = game.pawns.getPawns(team)
+    val pointsForNumberOfPawns = getPointsForNumberOfPawns(pawns)
+
+    val differenceBetweenNumberOfPawns = getDifferenceBetweenNumberOfPawns(game.pawns, team)
+
+    return when {
+        pointsForNumberOfPawns == 0 -> Int.MIN_VALUE
+        getPointsForNumberOfPawns(game.pawns.getPawns(team.opposite())) == 0 -> Int.MAX_VALUE
+        else -> differenceBetweenNumberOfPawns
+    }
+}
+
+
+fun evaluateGameComplex(game:Game, team:Team):Int {
     val numberOfAllPawns = 12
     val pawns = game.pawns.getPawns(team)
     val pointsForNumberOfPawns = getPointsForNumberOfPawns(pawns)
@@ -19,21 +33,17 @@ fun evaluateGame(game:Game, team:Team):Int {
     val pointsForFirstRow = pawns.filter { it.value.team.firstRow() == it.value.row }.count()
     val possibleMoves = game.possibleMoves.flatMap(getPossibleMovesFromGame(pawns)).count()
 
-    val sum = differenceBetweenNumberOfPawns
-    //pointsForNumberOfPawns// +
-//                pointsForEnemiesPawns +
-//        differenceBetweenNumberOfPawns +
-//                pointsForFirstRow
+    val sum =
+        differenceBetweenNumberOfPawns +
+                pointsForNumberOfPawns +
+                pointsForFirstRow
 
     return when {
-        pointsForNumberOfPawns == 0// || possibleMoves == 0
-        -> Int.MIN_VALUE
-//        possibleMoves in 1..2 -> sum * 3 / 4
+        pointsForNumberOfPawns == 0 || possibleMoves == 0 -> Int.MIN_VALUE
+        possibleMoves in 1..2 -> sum * 3 / 4
         else -> sum
     }
-
 }
-
 private fun getDifferenceBetweenNumberOfPawns(allPawns:Pawns, team:Team) =
     getPointsForNumberOfPawns(allPawns.getPawns(team)) -
             getPointsForNumberOfPawns(allPawns.getPawns(team.opposite()))
