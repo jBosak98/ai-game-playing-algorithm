@@ -5,6 +5,7 @@ const sendConfig = (sendMessage, data, config) => {
       ...data,
     },
   };
+  console.log(config)
   sendMessage(JSON.stringify(message));
 };
 
